@@ -41,7 +41,7 @@ class BcutASR:
     __download_url: str
     task_id: str
     
-    def __init__(self, file: Optional[str | PathLike] = None) -> None:
+    def __init__(self, file = None) -> None:
         self.session = requests.Session()
         self.task_id = None
         self.__etags = []
@@ -49,7 +49,7 @@ class BcutASR:
             self.set_data(file)
     
     def set_data(self,
-        file: Optional[str | PathLike] = None, 
+        file = None, 
         raw_data: Optional[bytes] = None,
         data_fmt: Optional[SUPPORT_SOUND_FORMAT] = None
     ) -> None:
