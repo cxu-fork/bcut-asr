@@ -91,32 +91,29 @@ def main():
         while True:
             # 轮询检查任务状态
             task_resp = asr.result()
-            match task_resp.state:
-                case ResultStateEnum.STOP:
-                    logging.info(f'等待识别开始')
-                case ResultStateEnum.RUNING:
-                    logging.info(f'识别中-{task_resp.remark}')
-                case ResultStateEnum.ERROR:
-                    logging.error(f'识别失败-{task_resp.remark}')
-                    sys.exit(-1)
-                case ResultStateEnum.COMPLETE:
-                    logging.info(f'识别成功')
-                    # 识别成功, 回读字幕数据
-                    result = task_resp.parse()
-                    break
+            if task_resp.state == ResultStateEnum.STOP:
+                logging.info('等待识别开始')
+            elif task_resp.state == ResultStateEnum.RUNING:
+                logging.info(f'识别中-{task_resp.remark}')
+            elif task_resp.state == ResultStateEnum.ERROR:
+                logging.error(f'识别失败-{task_resp.remark}')
+                sys.exit(-1)
+            elif task_resp.state == ResultStateEnum.COMPLETE:
+                logging.info('识别成功')
+                # 识别成功, 回读字幕数据
+                result = task_resp.parse()
             time.sleep(1.0)
         if not result.has_data():
             logging.error('未识别到语音')
             sys.exit(-1)
-        match outfile_fmt:
-            case 'srt':
-                outfile.write(result.to_srt())
-            case 'lrc':
-                outfile.write(result.to_lrc())
-            case 'json':
-                outfile.write(result.json())
-            case 'txt':
-                outfile.write(result.to_txt())
+        if outfile_fmt == 'srt':
+            outfile.write(result.to_srt())
+        elif outfile_fmt == 'lrc':
+            outfile.write(result.to_lrc())
+        elif outfile_fmt == 'json':
+            outfile.write(result.json())
+        elif outfile_fmt == 'txt':
+            outfile.write(result.to_txt())
         logging.info(f'转换成功: {outfile_name}')
     except APIError as err:
         logging.error(f'接口错误: {err.__str__()}')
