@@ -89,6 +89,7 @@ def main():
         # 创建任务
         task_id = asr.create_task()
         while True:
+            time.sleep(60)
             # 轮询检查任务状态
             task_resp = asr.result()
             if task_resp.state == ResultStateEnum.STOP:
@@ -103,7 +104,7 @@ def main():
                 # 识别成功, 回读字幕数据
                 result = task_resp.parse()
                 break
-            time.sleep(33.3)
+            
         if not result.has_data():
             logging.error('未识别到语音')
             sys.exit(-1)
