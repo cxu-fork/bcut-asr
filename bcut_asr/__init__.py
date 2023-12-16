@@ -114,7 +114,7 @@ class BcutASR:
             etag = resp.headers.get('Etag')
             self.__etags.append(etag)
             logging.info(f'分片{clip}上传成功: {etag}')
-            time.sleep(33)
+            time.sleep(2)
     
     def __commit_upload(self) -> None:
         '提交上传数据'
